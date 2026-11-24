@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HypertrophyLab · Pecho & Hombros Pro v1.3.0</title>
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --bg-elev: #121826;
+      --bg-card: #172033;
+      --bg-input: #0e1420;
+      --border: #26324b;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 120px;
+    }
+
+    header {
+      background: rgba(18, 24, 38, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 14px 20px;
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-badge {
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    .brand h1 { font-size: 1.15rem; font-weight: 700; }
+    .version-tag {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    nav.tabs {
+      display: flex;
+      gap: 6px;
+      background: var(--bg-input);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    nav.tabs button {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 14px;
+      border-radius: 7px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    nav.tabs button.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .card-title { font-size: 1.05rem; font-weight: 700; }
+    .card-sub { font-size: 0.84rem; color: var(--text-muted); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: var(--bg-elev);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.86rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .btn:hover { border-color: var(--accent); }
+    .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-success { background: var(--success); border-color: var(--success); color: #052e16; }
+    .btn-warning { background: var(--warning); border-color: var(--warning); color: #1c1917; }
+    .btn-danger { background: rgba(239,68,68,0.15); border-color: var(--danger); color: #fca5a5; }
+    .btn-lg { padding: 14px 22px; font-size: 1rem; border-radius: 10px; }
+
+    .coach-banner {
+      background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(16,185,129,0.14));
+      border: 1px solid rgba(59,130,246,0.45);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    select, input[type="number"], input[type="date"], input[type="text"] {
+      background: var(--bg-input);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+    }
+
+    .band-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+    .band-yellow .dot { background: #facc15; }
+    .band-pink .dot { background: #f472b6; }
+    .band-red .dot { background: #ef4444; }
+    .band-black .dot { background: #64748b; }
+    .band-purple .dot { background: #a855f7; }
+    .band-green .dot { background: #22c55e; }
+    .band-bodyweight .dot { background: #38bdf8; }
+
+    .prog-badge {
+      background: rgba(16, 185, 129, 0.16);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .sets-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    .sets-table th {
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sets-table td {
+      padding: 8px;
+      border-bottom: 1px solid rgba(38, 50, 75, 0.5);
+      vertical-align: middle;
+    }
+    .set-done {
+      background: rgba(16, 185, 129, 0.08);
+    }
+    .check-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: 2px solid var(--border);
+      background: var(--bg-input);
+      color: transparent;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .check-btn.checked {
+      background: var(--success);
+      border-color: var(--success);
+      color: #052e16;
+    }
+
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+      gap: 10px;
+    }
+    .day-box {
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .day-box.active-day {
+      border-color: var(--accent);
+      background: rgba(59, 130, 246, 0.08);
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .cal-head {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    .cal-cell {
+      min-height: 58px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .cal-cell:hover { border-color: var(--accent); }
+    .cal-cell.today { border-color: var(--warning); }
+    .cal-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .tag-done { background: rgba(16,185,129,0.22); color: #6ee7b7; }
+    .tag-plan { background: rgba(59,130,246,0.22); color: #93c5fd; }
+
+    .rest-dock {
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 24px);
+      max-width: 720px;
+      background: #101726;
+      border: 1px solid var(--accent);
+      border-radius: 14px;
+      padding: 12px 16px;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      z-index: 80;
+    }
+    .rest-time {
+      font-size: 1.55rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      color: #60a5fa;
+    }
+
+    .coach-overlay {
+      position: fixed;
+      inset: 0;
+      background: #070b12;
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .coach-overlay.open { display: flex; }
+    .coach-topbar {
+      padding: 14px 20px;
+      background: var(--bg-elev);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .progress-bar-wrap {
+      width: 100%;
+      height: 6px;
+      background: var(--bg-input);
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #10b981);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .coach-stage {
+      flex: 1;
+      max-width: 760px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 18px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .coach-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .coach-phase-pill {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+    .phase-prep { background: rgba(59,130,246,0.2); color: #93c5fd; }
+    .phase-work { background: rgba(16,185,129,0.2); color: #6ee7b7; }
+    .phase-rest { background: rgba(245,158,11,0.2); color: #fcd34d; }
+
+    .big-timer {
+      font-size: 3.6rem;
+      font-weight: 900;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      margin: 12px 0;
+      letter-spacing: -0.02em;
+    }
+    .tempo-box {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      margin: 14px 0;
+    }
+    .tempo-cue {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #38bdf8;
+    }
+    .rep-stepper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin: 14px 0;
+    }
+    .rep-stepper button {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+    .rep-stepper span {
+      font-size: 1.8rem;
+      font-weight: 800;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 300;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      max-width: 560px;
+      width: 100%;
+      padding: 20px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    @media (max-width: 640px) {
+      .sets-table th:nth-child(4), .sets-table td:nth-child(4) { display: none; }
+      .big-timer { font-size: 2.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-badge">PRO</span>
+      <h1>HypertrophyLab · Pecho & Hombros</h1>
+      <span class="version-tag" id="versionBtn" title="Ver historial de cambios">v1.3.0</span>
+    </div>
+    <nav class="tabs" id="mainTabs">
+      <button class="active" data-tab="train">Entrenar</button>
+      <button data-tab="plan">Planning</button>
+      <button data-tab="analytics">Progresión</button>
+      <button data-tab="guide">Set Fokky</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- TAB 1: ENTRENAR -->
+  <section id="tab-train" class="panel active">
+    <div class="coach-banner">
+      <div>
+        <div style="font-weight:800; font-size:1.05rem; margin-bottom:2px;">Modo Entrenador Guiado en Vivo</div>
+        <div class="card-sub">Volumen calibrado para hipertrofia y salud articular: guía paso a paso, tempo 3s y descansos automáticos.</div>
+      </div>
+      <button class="btn btn-primary btn-lg" id="startLiveCoachBtn">▶ Iniciar Entrenamiento Guiado</button>
+    </div>
+
+    <div class="controls-bar">
+      <label style="font-size:0.84rem; color:var(--text-muted);">Fecha:</label>
+      <input type="date" id="workoutDate" />
+      <label style="font-size:0.84rem; color:var(--text-muted);">Sesión:</label>
+      <select id="sessionSelect">
+        <option value="A">Sesión A (Martes · Pectoral Medio/Inf + Énfasis Hombro Lat)</option>
+        <option value="B">Sesión B (Viernes · Pectoral Sup/Inf + Énfasis Hombro Post)</option>
+      </select>
+      <button class="btn btn-success" id="finishWorkoutBtn">Guardar Sesión Completa</button>
+    </div>
+
+    <div id="workoutContainer"></div>
+  </section>
+
+  <!-- TAB 2: PLANNING -->
+  <section id="tab-plan" class="panel">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Configuración Semanal de Días de Entreno</div>
+          <div class="card-sub">Activa tus días habituales (por defecto Martes y Viernes) y asigna qué sesión corresponde a cada uno.</div>
+        </div>
+      </div>
+      <div class="week-grid" id="weekPlannerGrid"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title" id="calMonthTitle">Calendario de Sesiones</div>
+          <div class="card-sub">Haz clic en cualquier día para abrir y registrar ese entrenamiento.</div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button class="btn" id="prevMonthBtn">◀</button>
+          <button class="btn" id="nextMonthBtn">▶</button>
+        </div>
+      </div>
+      <div class="cal-grid" id="calendarGrid"></div>
+    </div>
+  </section>
+
+  <!-- TAB 3: PROGRESIÓN Y DATOS -->
+  <section id="tab-analytics" class="panel">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Evolución por Ejercicio</div>
+          <div class="card-sub">Seguimiento automático de repeticiones máximas, banda Fokky y carga añadida.</div>
+        </div>
+        <select id="chartExerciseSelect"></select>
+      </div>
+      <div id="chartArea" style="width:100%; overflow-x:auto;"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Historial y Copias de Seguridad</div>
+          <div class="card-sub">Tus datos se guardan localmente en este navegador. Exporta un JSON cuando quieras respaldarlos.</div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="exportJsonBtn">Exportar JSON</button>
+          <label class="btn" style="cursor:pointer;">
+            Importar JSON
+            <input type="file" id="importJsonInput" accept=".json" style="display:none;" />
+          </label>
+        </div>
+      </div>
+      <div id="historyList"></div>
+    </div>
+  </section>
+
+  <!-- TAB 4: GUÍA SET FOKKY -->
+  <section id="tab-guide" class="panel">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:8px;">Equivalencias y Uso del Set de Bandas Fokky</div>
+      <p class="card-sub" style="margin-bottom:14px;">Configuración optimizada para hipertrofia real sin sobrecargar articulaciones pequeñas:</p>
+      <table class="sets-table">
+        <thead>
+          <tr>
+            <th>Banda</th>
+            <th>Resistencia</th>
+            <th>Uso Principal en tu Plan</th>
+            <th>Regla de Subida</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="band-pill band-yellow"><span class="dot"></span>Amarilla</span></td>
+            <td>5–15 lbs</td>
+            <td>Elevaciones laterales o calentamiento ligero</td>
+            <td>Al completar el tope de repeticiones limpias (RIR 1–2), pasa a Rosa / Roja.</td>
+          </tr>
+          <tr>
+            <td><span class="band-pill band-pink"><span class="dot"></span>Rosa</span></td>
+            <td>~15–25 lbs (ligera)</td>
+            <td><strong>Ejercicio 5:</strong> Apertura posterior unilateral en puerta (brazo a brazo)</td>
+            <td>Al completar 15–20 reps limpias sin rotar el torso, aumenta tensión o pasa a Roja.</td>
+          </tr>
+          <tr>
+            <td><span class="band-pill band-red"><span class="dot"></span>Roja</span></td>
+            <td>15–35 lbs</td>
+            <td><strong>Ejercicio 4:</strong> Elevaciones laterales (controladas, sin balanceo)</td>
+            <td>Al completar 18–20 reps con técnica estricta, aumenta tensión pisando más ancho.</td>
+          </tr>
+          <tr>
+            <td><span class="band-pill band-black"><span class="dot"></span>Negra</span></td>
+            <td>25–65 lbs</td>
+            <td>Respaldo en cruces de pecho o apoyo extra</td>
+            <td>Al completar 3×15 con tensión continua, sube a Púrpura.</td>
+          </tr>
+          <tr>
+            <td><span class="band-pill band-purple"><span class="dot"></span>Púrpura</span></td>
+            <td>35–85 lbs</td>
+            <td><strong>Ejercicio 3:</strong> Cruce de pecho unilateral en puerta (primero un brazo, luego el otro)</td>
+            <td>Al completar 10–15 reps por brazo con tensión continua y regreso controlado, añade +1-2 reps o pasa a Verde.</td>
+          </tr>
+          <tr>
+            <td><span class="band-pill band-green"><span class="dot"></span>Verde</span></td>
+            <td>50–125 lbs</td>
+            <td>Lastre pesado en flexiones si buscas más carga</td>
+            <td>Solo cuando domines 4×12 flexiones con bajada de 3s.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<!-- FLOATING REST TIMER -->
+<div class="rest-dock" id="restDock">
+  <div>
+    <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;" id="restLabel">DESCANSO LISTO</div>
+    <div class="rest-time" id="restDisplay">01:30</div>
+  </div>
+  <div style="display:flex; gap:6px; flex-wrap:wrap;">
+    <button class="btn" id="restMinusBtn">-15s</button>
+    <button class="btn" id="restPlusBtn">+15s</button>
+    <button class="btn btn-primary" id="restToggleBtn">Iniciar</button>
+    <button class="btn" id="restResetBtn">Reset</button>
+  </div>
+</div>
+
+<!-- LIVE GUIDED TRAINER OVERLAY -->
+<div class="coach-overlay" id="coachOverlay">
+  <div class="coach-topbar">
+    <div>
+      <div style="font-weight:800; font-size:0.95rem;" id="coachSessionTitle">Entrenamiento en Vivo</div>
+      <div style="font-size:0.78rem; color:var(--text-muted);" id="coachStepCounter">Paso 1 de 12</div>
+    </div>
+    <button class="btn btn-danger" id="closeCoachBtn">Salir del modo guía</button>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="coachProgressBar"></div></div>
+
+  <div class="coach-stage" id="coachStage"></div>
+</div>
+
+<!-- CHANGELOG MODAL -->
+<div class="modal-backdrop" id="changelogModal">
+  <div class="modal-box">
+    <div class="card-header">
+      <div class="card-title">Historial de Versiones · HypertrophyLab</div>
+      <button class="btn" id="closeChangelogBtn">Cerrar</button>
+    </div>
+    <div style="font-size:0.88rem; color:var(--text-muted); display:flex; flex-direction:column; gap:12px;">
+      <div>
+        <strong style="color:var(--text);">v1.3.0 (Actual)</strong>
+        <ul style="margin-left:18px; margin-top:4px;">
+          <li>Calibrado profesional del volumen de hombro para evitar fatiga acumulada tras las flexiones: bajada de 4 a <strong>3 series</strong> en elevaciones laterales (Martes) y <strong>2 series</strong> (Viernes), y ajuste a <strong>2 series</strong> (Martes) / <strong>3 series</strong> (Viernes) en aperturas posteriores unilaterales.</li>
+          <li>Indicaciones explícitas de reserva técnica (RIR 1–2) en aislamientos de hombro para proteger articulaciones pequeñas.</li>
+        </ul>
+      </div>
+      <div>
+        <strong style="color:var(--text);">v1.2.0</strong>
+        <ul style="margin-left:18px; margin-top:4px;">
+          <li>Configurado Ejercicio 3 (Cruce de pecho unilateral en puerta) con banda Púrpura y Ejercicio 5 (Apertura posterior unilateral en puerta) con banda Rosa.</li>
+        </ul>
+      </div>
+      <div>
+        <strong style="color:var(--text);">v1.1.0</strong>
+        <ul style="margin-left:18px; margin-top:4px;">
+          <li>Añadido Modo Entrenador Guiado en Vivo con flujo automático serie a serie y metrónomo de tempo 3s.</li>
+        </ul>
+      </div>
+      <div>
+        <strong style="color:var(--text);">v1.0.0</strong>
+        <ul style="margin-left:18px; margin-top:4px;">
+          <li>Planificación semanal editable (Martes y Viernes por defecto), calendario mensual, doble progresión y respaldo JSON.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const STORAGE_KEY = "hypertrophy_lab_pecho_hombros_v13";
+
+  const BANDS = [
+    { id: "bodyweight", label: "Peso Corporal / Lastre", cls: "band-bodyweight" },
+    { id: "yellow", label: "Amarilla (5-15 lb)", cls: "band-yellow" },
+    { id: "pink", label: "Rosa (Ligera)", cls: "band-pink" },
+    { id: "red", label: "Roja (15-35 lb)", cls: "band-red" },
+    { id: "black", label: "Negra (25-65 lb)", cls: "band-black" },
+    { id: "purple", label: "Púrpura (35-85 lb)", cls: "band-purple" },
+    { id: "green", label: "Verde (50-125 lb)", cls: "band-green" }
+  ];
+
+  const WORKOUT_TEMPLATES = {
+    A: {
+      name: "Sesión A (Martes) · Pectoral Medio/Inf + Énfasis Hombro Lateral",
+      exercises: [
+        {
+          id: "warmup_a",
+          name: "1. Calentamiento: Movilidad + Flexiones Suaves",
+          sets: 2,
+          repMin: 6,
+          repMax: 8,
+          restSec: 60,
+          defaultBand: "bodyweight",
+          tempo: "Fluido · Lejos del fallo",
+          useTempoGuide: false,
+          instructions: "Realiza rotaciones de hombros y retracción escapular durante 1 minuto. Haz 6-8 flexiones muy cómodas solo para lubricar articulaciones sin fatigar."
+        },
+        {
+          id: "pushup_std",
+          name: "2. Flexiones Estándar Controladas",
+          sets: 4,
+          repMin: 8,
+          repMax: 12,
+          restSec: 150,
+          defaultBand: "bodyweight",
+          tempo: "3s bajada · 1.5s pausa abajo · Subida explosiva",
+          useTempoGuide: true,
+          instructions: "Manos ligeramente más anchas que los hombros, abdomen firme. Baja en 3 segundos completos, mantén 1.5s abajo sin apoyar el pecho en el suelo y sube fuerte cerca del fallo técnico."
+        },
+        {
+          id: "fly_mid_uni",
+          name: "3. Cruce de Pecho Unilateral en Puerta (Banda Púrpura)",
+          sets: 3,
+          repMin: 10,
+          repMax: 15,
+          restSec: 90,
+          defaultBand: "purple",
+          tempo: "2s cierre · 1s apriete · 3s regreso controlado",
+          useTempoGuide: false,
+          instructions: "Ancla la banda PÚRPURA a la altura del pecho (lado que cierra hacia ti). Colócate de lado a la puerta: haz todas las repeticiones con un brazo cruzando hacia el pecho opuesto y luego cambia al otro brazo manteniendo tensión continua."
+        },
+        {
+          id: "lat_raise_a",
+          name: "4. Elevaciones Laterales con Goma (Énfasis Anchura)",
+          sets: 3,
+          repMin: 12,
+          repMax: 20,
+          restSec: 75,
+          defaultBand: "red",
+          tempo: "Subida firme · 2s bajada controlada",
+          useTempoGuide: false,
+          instructions: "Pisa la goma con un pie. Eleva los brazos hacia los lados hasta la altura de los hombros sin balancear el torso ni encoger trapecios. Quédate 1–2 reps antes del fallo técnico (RIR 1–2)."
+        },
+        {
+          id: "rear_delt_uni_a",
+          name: "5. Apertura Posterior Unilateral en Puerta (Banda Rosa · Mantenimiento)",
+          sets: 2,
+          repMin: 15,
+          repMax: 20,
+          restSec: 60,
+          defaultBand: "pink",
+          tempo: "2s apertura · 1s pausa atrás · 2s vuelta",
+          useTempoGuide: false,
+          instructions: "Ancla la banda ROSA a la altura del pecho. De frente a la puerta, abre un brazo hacia atrás juntando la escápula con el torso firme (sin girar) y luego cambia al otro brazo. Series limpias sin forzar."
+        }
+      ]
+    },
+    B: {
+      name: "Sesión B (Viernes) · Pectoral Sup/Inf + Énfasis Hombro Posterior",
+      exercises: [
+        {
+          id: "warmup_b",
+          name: "1. Calentamiento: Rotaciones + Flexiones Suaves",
+          sets: 2,
+          repMin: 6,
+          repMax: 8,
+          restSec: 60,
+          defaultBand: "bodyweight",
+          tempo: "Fluido · Lejos del fallo",
+          useTempoGuide: false,
+          instructions: "Activa manguito rotador y escápulas con círculos amplios. Completa 6-8 flexiones suaves dejando muchas repeticiones en recámara."
+        },
+        {
+          id: "pushup_incline",
+          name: "2. Flexiones Pies Elevados (Pectoral Superior)",
+          sets: 4,
+          repMin: 8,
+          repMax: 12,
+          restSec: 150,
+          defaultBand: "bodyweight",
+          tempo: "3s bajada · 1.5s pausa abajo · Subida explosiva",
+          useTempoGuide: true,
+          instructions: "Coloca los pies sobre una silla o sofá estable. Baja llevando la parte alta del pecho hacia las manos en 3 segundos, pausa 1.5s abajo y empuja con fuerza."
+        },
+        {
+          id: "fly_low_uni",
+          name: "3. Cruce de Pecho hacia Abajo Unilateral en Puerta (Banda Púrpura)",
+          sets: 3,
+          repMin: 10,
+          repMax: 15,
+          restSec: 90,
+          defaultBand: "purple",
+          tempo: "2s cierre abajo · 1s apriete · 3s regreso controlado",
+          useTempoGuide: false,
+          instructions: "Ancla la banda PÚRPURA arriba/medio en la puerta. Colócate de lado y cruza hacia abajo/adentro con un brazo manteniendo tensión continua y controlando el regreso, luego cambia de brazo."
+        },
+        {
+          id: "lat_raise_b",
+          name: "4. Elevaciones Laterales con Goma (Controladas)",
+          sets: 2,
+          repMin: 12,
+          repMax: 20,
+          restSec: 75,
+          defaultBand: "red",
+          tempo: "Subida firme · 2s bajada controlada",
+          useTempoGuide: false,
+          instructions: "2 series efectivas con técnica estricta (RIR 1–2) para estimular el deltoides lateral sin acumular fatiga innecesaria tras las flexiones inclinadas."
+        },
+        {
+          id: "rear_delt_uni_b",
+          name: "5. Apertura Posterior Unilateral en Puerta (Banda Rosa)",
+          sets: 3,
+          repMin: 15,
+          repMax: 20,
+          restSec: 60,
+          defaultBand: "pink",
+          tempo: "2s apertura · 1s pausa atrás · 2s vuelta",
+          useTempoGuide: false,
+          instructions: "De frente a la puerta con banda ROSA: abre un brazo hacia atrás juntando la escápula con torso firme y sin encoger el hombro hacia la oreja; luego cambia al otro brazo."
+        }
+      ]
+    }
+  };
+
+  const DAYS_OF_WEEK = [
+    { idx: 1, name: "Lunes" },
+    { idx: 2, name: "Martes" },
+    { idx: 3, name: "Miércoles" },
+    { idx: 4, name: "Jueves" },
+    { idx: 5, name: "Viernes" },
+    { idx: 6, name: "Sábado" },
+    { idx: 0, name: "Domingo" }
+  ];
+
+  let state = loadState();
+  let currentDateStr = todayISO();
+  let currentSession = detectSessionForDate(currentDateStr);
+  let draftSets = {};
+  let calViewDate = new Date();
+
+  let audioCtx = null;
+  function playBeep(freq = 660, duration = 0.14, type = "sine") {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    } catch (e) {}
+  }
+
+  function todayISO() {
+    const d = new Date();
+    return d.toISOString().split("T")[0];
+  }
+
+  function loadState() {
+    const raw = localStorage.getItem(STORAGE_KEY)
+      || localStorage.getItem("hypertrophy_lab_pecho_hombros_v12")
+      || localStorage.getItem("hypertrophy_lab_pecho_hombros_v1");
+    if (raw) {
+      try { return JSON.parse(raw); } catch (e) {}
+    }
+    return {
+      schedule: {
+        1: { active: false, session: "A" },
+        2: { active: true, session: "A" },
+        3: { active: false, session: "B" },
+        4: { active: false, session: "A" },
+        5: { active: true, session: "B" },
+        6: { active: false, session: "A" },
+        0: { active: false, session: "B" }
+      },
+      logs: {}
+    };
+  }
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function detectSessionForDate(dateStr) {
+    if (state.logs[dateStr]?.session) return state.logs[dateStr].session;
+    const dow = new Date(dateStr + "T12:00:00").getDay();
+    if (state.schedule[dow]?.active) return state.schedule[dow].session;
+    return "A";
+  }
+
+  function getLastExerciseLog(exId, beforeDate) {
+    const dates = Object.keys(state.logs)
+      .filter(d => d < beforeDate && state.logs[d]?.exercises?.[exId])
+      .sort()
+      .reverse();
+    return dates.length ? state.logs[dates[0]].exercises[exId] : null;
+  }
+
+  function getProgressionAdvice(ex, beforeDate) {
+    const last = getLastExerciseLog(ex.id, beforeDate);
+    if (!last || !last.length) return null;
+    const allHitMax = last.every(s => s.done && Number(s.reps) >= ex.repMax);
+    const currentBandIdx = BANDS.findIndex(b => b.id === (last[0].band || ex.defaultBand));
+    if (allHitMax) {
+      if (ex.defaultBand === "bodyweight" && last[0].band === "bodyweight") {
+        const nextKg = (Number(last[0].extraKg) || 0) + 2;
+        return `¡Objetivo superado! Hoy añade +${nextKg} kg en mochila o usa banda Púrpura.`;
+      }
+      if (currentBandIdx > 0 && currentBandIdx < BANDS.length - 1) {
+        return `¡Doble progresión lista! Sube hoy a banda ${BANDS[currentBandIdx + 1].label}.`;
+      }
+      return `¡Tope alcanzado! Añade +1-2 reps o ralentiza 1s más la bajada.`;
+    }
+    const bestReps = Math.max(...last.map(s => Number(s.reps) || 0));
+    return `Última marca: ${bestReps} reps (${BANDS.find(b => b.id === last[0].band)?.label || ""}). Busca +1 rep por serie.`;
+  }
+
+  function initDraftForCurrent() {
+    const tpl = WORKOUT_TEMPLATES[currentSession];
+    const saved = state.logs[currentDateStr]?.session === currentSession ? state.logs[currentDateStr].exercises : null;
+    draftSets = {};
+    tpl.exercises.forEach(ex => {
+      if (saved && saved[ex.id] && saved[ex.id].length === ex.sets) {
+        draftSets[ex.id] = JSON.parse(JSON.stringify(saved[ex.id]));
+      } else {
+        const prev = getLastExerciseLog(ex.id, currentDateStr);
+        draftSets[ex.id] = Array.from({ length: ex.sets }, (_, i) => ({
+          reps: saved?.[ex.id]?.[i]?.reps || prev?.[i]?.reps || ex.repMin,
+          band: saved?.[ex.id]?.[i]?.band || prev?.[i]?.band || ex.defaultBand,
+          extraKg: saved?.[ex.id]?.[i]?.extraKg || prev?.[i]?.extraKg || 0,
+          done: saved?.[ex.id]?.[i]?.done || false
+        }));
+      }
+    });
+  }
+
+  function renderWorkout() {
+    const container = document.getElementById("workoutContainer");
+    const tpl = WORKOUT_TEMPLATES[currentSession];
+    container.innerHTML = "";
+
+    tpl.exercises.forEach((ex) => {
+      const advice = getProgressionAdvice(ex, currentDateStr);
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="card-header">
+          <div>
+            <div class="card-title">${ex.name}</div>
+            <div class="card-sub">Meta: <strong>${ex.sets} × ${ex.repMin}–${ex.repMax} reps</strong> · Descanso: <strong>${ex.restSec}s</strong> · Tempo: ${ex.tempo}</div>
+          </div>
+          ${advice ? `<div class="prog-badge">📈 ${advice}</div>` : ""}
+        </div>
+        <p style="font-size:0.84rem; color:var(--text-muted); margin-bottom:10px;">${ex.instructions}</p>
+        <table class="sets-table">
+          <thead>
+            <tr>
+              <th>Serie</th>
+              <th>Banda Fokky / Carga</th>
+              <th>Lastre (kg)</th>
+              <th>Objetivo</th>
+              <th>Reps</th>
+              <th>Hecho</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${draftSets[ex.id].map((s, sIdx) => `
+              <tr class="${s.done ? "set-done" : ""}">
+                <td><strong>#${sIdx + 1}</strong></td>
+                <td>
+                  <select data-ex="${ex.id}" data-set="${sIdx}" data-field="band">
+                    ${BANDS.map(b => `<option value="${b.id}" ${s.band === b.id ? "selected" : ""}>${b.label}</option>`).join("")}
+                  </select>
+                </td>
+                <td><input type="number" min="0" max="60" step="0.5" style="width:72px;" value="${s.extraKg}" data-ex="${ex.id}" data-set="${sIdx}" data-field="extraKg" /></td>
+                <td style="font-size:0.82rem; color:var(--text-muted);">${ex.repMin}–${ex.repMax}</td>
+                <td><input type="number" min="1" max="50" style="width:72px;" value="${s.reps}" data-ex="${ex.id}" data-set="${sIdx}" data-field="reps" /></td>
+                <td>
+                  <button class="check-btn ${s.done ? "checked" : ""}" data-toggle-ex="${ex.id}" data-toggle-set="${sIdx}" data-rest="${ex.restSec}" data-name="${ex.name}">✓</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+      container.appendChild(card);
+    });
+
+    container.querySelectorAll("select, input").forEach(el => {
+      el.addEventListener("change", e => {
+        const { ex, set, field } = e.target.dataset;
+        draftSets[ex][set][field] = field === "band" ? e.target.value : Number(e.target.value);
+        persistDraft();
+      });
+    });
+
+    container.querySelectorAll("[data-toggle-ex]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const ex = btn.dataset.toggleEx;
+        const set = Number(btn.dataset.toggleSet);
+        const rest = Number(btn.dataset.rest);
+        const name = btn.dataset.name;
+        const newState = !draftSets[ex][set].done;
+        draftSets[ex][set].done = newState;
+        persistDraft();
+        renderWorkout();
+        if (newState) {
+          playBeep(740, 0.12);
+          startRestTimer(rest, `Descanso tras ${name} (Serie ${set + 1})`);
+        }
+      });
+    });
+  }
+
+  function persistDraft() {
+    state.logs[currentDateStr] = {
+      session: currentSession,
+      completed: Object.values(draftSets).flat().every(s => s.done),
+      exercises: JSON.parse(JSON.stringify(draftSets))
+    };
+    saveState();
+  }
+
+  // FLOATING REST TIMER
+  let restSeconds = 90;
+  let restInterval = null;
+  let restRunning = false;
+
+  function formatTime(sec) {
+    const m = Math.floor(sec / 60).toString().padStart(2, "0");
+    const s = (sec % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  }
+
+  function updateRestUI() {
+    document.getElementById("restDisplay").textContent = formatTime(restSeconds);
+    document.getElementById("restToggleBtn").textContent = restRunning ? "Pausar" : "Iniciar";
+  }
+
+  function startRestTimer(sec, label = "DESCANSO ACTIVO") {
+    clearInterval(restInterval);
+    restSeconds = sec;
+    restRunning = true;
+    document.getElementById("restLabel").textContent = label.toUpperCase();
+    updateRestUI();
+    restInterval = setInterval(() => {
+      if (restSeconds > 0) {
+        restSeconds--;
+        if (restSeconds <= 3 && restSeconds > 0) playBeep(520, 0.08);
+        updateRestUI();
+      } else {
+        clearInterval(restInterval);
+        restRunning = false;
+        document.getElementById("restLabel").textContent = "¡TIEMPO CUMPLIDO! SIGUIENTE SERIE";
+        playBeep(880, 0.25);
+        setTimeout(() => playBeep(1040, 0.3), 180);
+        updateRestUI();
+      }
+    }, 1000);
+  }
+
+  document.getElementById("restMinusBtn").onclick = () => { restSeconds = Math.max(0, restSeconds - 15); updateRestUI(); };
+  document.getElementById("restPlusBtn").onclick = () => { restSeconds += 15; updateRestUI(); };
+  document.getElementById("restResetBtn").onclick = () => { clearInterval(restInterval); restRunning = false; restSeconds = 90; updateRestUI(); };
+  document.getElementById("restToggleBtn").onclick = () => {
+    if (restRunning) {
+      clearInterval(restInterval);
+      restRunning = false;
+      updateRestUI();
+    } else {
+      startRestTimer(restSeconds || 90);
+    }
+  };
+
+  // LIVE GUIDED COACH ENGINE
+  let coachQueue = [];
+  let coachIdx = 0;
+  let coachPhase = "prep";
+  let coachWorkSec = 0;
+  let coachRestSec = 0;
+  let coachInterval = null;
+  let tempoInterval = null;
+  let tempoRunning = false;
+
+  function buildCoachQueue() {
+    const tpl = WORKOUT_TEMPLATES[currentSession];
+    const q = [];
+    tpl.exercises.forEach(ex => {
+      draftSets[ex.id].forEach((setObj, sIdx) => {
+        q.push({
+          ex,
+          setIdx: sIdx,
+          totalSets: ex.sets,
+          setData: setObj
+        });
+      });
+    });
+    return q;
+  }
+
+  function stopCoachTimers() {
+    clearInterval(coachInterval);
+    clearInterval(tempoInterval);
+    tempoRunning = false;
+  }
+
+  document.getElementById("startLiveCoachBtn").addEventListener("click", () => {
+    coachQueue = buildCoachQueue();
+    const firstPending = coachQueue.findIndex(item => !item.setData.done);
+    coachIdx = firstPending >= 0 ? firstPending : 0;
+    coachPhase = "prep";
+    document.getElementById("coachSessionTitle").textContent = WORKOUT_TEMPLATES[currentSession].name;
+    document.getElementById("coachOverlay").classList.add("open");
+    renderCoachStage();
+  });
+
+  document.getElementById("closeCoachBtn").addEventListener("click", () => {
+    stopCoachTimers();
+    document.getElementById("coachOverlay").classList.remove("open");
+    renderWorkout();
+  });
+
+  function renderCoachStage() {
+    stopCoachTimers();
+    const stage = document.getElementById("coachStage");
+    const pct = Math.round((coachIdx / coachQueue.length) * 100);
+    document.getElementById("coachProgressBar").style.width = `${pct}%`;
+
+    if (coachIdx >= coachQueue.length || coachPhase === "done") {
+      document.getElementById("coachStepCounter").textContent = "Sesión Finalizada";
+      document.getElementById("coachProgressBar").style.width = "100%";
+      persistDraft();
+      playBeep(880, 0.2);
+      setTimeout(() => playBeep(1100, 0.35), 220);
+      stage.innerHTML = `
+        <div class="coach-card" style="text-align:center; padding:36px 20px;">
+          <div style="font-size:3rem; margin-bottom:10px;">🏆</div>
+          <h2 style="font-size:1.5rem; margin-bottom:8px;">¡Entrenamiento Completado!</h2>
+          <p class="card-sub" style="margin-bottom:20px;">Todas las series han quedado registradas en tu historial y el motor de progresión ya ha actualizado tus metas para la próxima sesión.</p>
+          <button class="btn btn-success btn-lg" id="coachFinishExitBtn">Volver al Resumen de Sesión</button>
+        </div>
+      `;
+      document.getElementById("coachFinishExitBtn").onclick = () => {
+        document.getElementById("coachOverlay").classList.remove("open");
+        renderWorkout();
+        renderCalendar();
+      };
+      return;
+    }
+
+    const step = coachQueue[coachIdx];
+    const bandObj = BANDS.find(b => b.id === step.setData.band) || BANDS[0];
+    document.getElementById("coachStepCounter").textContent = `Bloque ${coachIdx + 1} de ${coachQueue.length} · Serie ${step.setIdx + 1}/${step.totalSets}`;
+
+    if (coachPhase === "prep") {
+      stage.innerHTML = `
+        <div class="coach-card">
+          <span class="coach-phase-pill phase-prep">1. Preparación · Serie ${step.setIdx + 1} de ${step.totalSets}</span>
+          <h2 style="font-size:1.45rem; margin-bottom:8px;">${step.ex.name}</h2>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+            <span class="band-pill ${bandObj.cls}"><span class="dot"></span>${bandObj.label}${step.setData.extraKg > 0 ? ` + ${step.setData.extraKg} kg` : ""}</span>
+            <span class="band-pill band-bodyweight">Meta: ${step.ex.repMin}–${step.ex.repMax} reps</span>
+            <span class="band-pill band-bodyweight">Tempo: ${step.ex.tempo}</span>
+          </div>
+          <div style="background:var(--bg-input); border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:18px;">
+            <strong style="font-size:0.84rem; color:#93c5fd; display:block; margin-bottom:4px;">Instrucciones del Entrenador:</strong>
+            <p style="font-size:0.94rem; color:var(--text);">${step.ex.instructions}</p>
+          </div>
+          <button class="btn btn-primary btn-lg" style="width:100%;" id="coachStartSetBtn">▶ Empezar Serie ${step.setIdx + 1}</button>
+        </div>
+      `;
+      document.getElementById("coachStartSetBtn").onclick = () => {
+        playBeep(740, 0.14);
+        coachPhase = "work";
+        coachWorkSec = 0;
+        renderCoachStage();
+      };
+    } else if (coachPhase === "work") {
+      stage.innerHTML = `
+        <div class="coach-card">
+          <span class="coach-phase-pill phase-work">2. Ejecutando Serie ${step.setIdx + 1} de ${step.totalSets}</span>
+          <h2 style="font-size:1.35rem; margin-bottom:4px;">${step.ex.name}</h2>
+          <div class="card-sub">Banda: <strong>${bandObj.label}</strong> · Objetivo: <strong>${step.ex.repMin}–${step.ex.repMax} reps</strong></div>
+
+          <div class="big-timer" id="coachWorkTimer">00:00</div>
+
+          ${step.ex.useTempoGuide ? `
+            <div class="tempo-box">
+              <div style="font-size:0.78rem; color:var(--text-muted); margin-bottom:4px;">ASISTENTE DE TEMPO (3s BAJADA · 1.5s PAUSA · SUBIDA)</div>
+              <div class="tempo-cue" id="tempoCueText">Listo para marcar ritmo</div>
+              <button class="btn" style="margin-top:8px;" id="toggleTempoGuideBtn">🔊 Activar Guía de Ritmo 3s</button>
+            </div>
+          ` : ""}
+
+          <div style="text-align:center; margin-top:14px;">
+            <div style="font-size:0.84rem; color:var(--text-muted);">Repeticiones realizadas en esta serie:</div>
+            <div class="rep-stepper">
+              <button class="btn" id="repMinusBtn">-</button>
+              <span id="liveRepVal">${step.setData.reps}</span>
+              <button class="btn" id="repPlusBtn">+</button>
+            </div>
+          </div>
+
+          <button class="btn btn-success btn-lg" style="width:100%; margin-top:10px;" id="coachCompleteSetBtn">✓ Ya estoy · Serie Completada</button>
+        </div>
+      `;
+
+      coachInterval = setInterval(() => {
+        coachWorkSec++;
+        const el = document.getElementById("coachWorkTimer");
+        if (el) el.textContent = formatTime(coachWorkSec);
+      }, 1000);
+
+      document.getElementById("repMinusBtn").onclick = () => {
+        step.setData.reps = Math.max(1, Number(step.setData.reps) - 1);
+        document.getElementById("liveRepVal").textContent = step.setData.reps;
+      };
+      document.getElementById("repPlusBtn").onclick = () => {
+        step.setData.reps = Number(step.setData.reps) + 1;
+        document.getElementById("liveRepVal").textContent = step.setData.reps;
+      };
+
+      const tempoBtn = document.getElementById("toggleTempoGuideBtn");
+      if (tempoBtn) {
+        tempoBtn.onclick = () => {
+          if (tempoRunning) {
+            clearInterval(tempoInterval);
+            tempoRunning = false;
+            tempoBtn.textContent = "🔊 Activar Guía de Ritmo 3s";
+            document.getElementById("tempoCueText").textContent = "Guía pausada";
+          } else {
+            tempoRunning = true;
+            tempoBtn.textContent = "⏸ Pausar Guía de Ritmo";
+            let tick = 0;
+            const runCycle = () => {
+              const phase = tick % 6;
+              const cueEl = document.getElementById("tempoCueText");
+              if (!cueEl) return;
+              if (phase === 0) { cueEl.textContent = "⬇ BAJA LENTO (1...)"; playBeep(440, 0.08); }
+              else if (phase === 1) { cueEl.textContent = "⬇ BAJA LENTO (2...)"; playBeep(440, 0.08); }
+              else if (phase === 2) { cueEl.textContent = "⬇ BAJA LENTO (3...)"; playBeep(440, 0.08); }
+              else if (phase === 3 || phase === 4) { cueEl.textContent = "⏸ MANTÉN ABAJO (PAUSA)"; playBeep(580, 0.06); }
+              else if (phase === 5) { cueEl.textContent = "⬆ ¡SUBE EXPLOSIVO!"; playBeep(820, 0.14); }
+              tick++;
+            };
+            runCycle();
+            tempoInterval = setInterval(runCycle, 1000);
+          }
+        };
+      }
+
+      document.getElementById("coachCompleteSetBtn").onclick = () => {
+        step.setData.done = true;
+        persistDraft();
+        playBeep(780, 0.15);
+        if (coachIdx + 1 >= coachQueue.length) {
+          coachIdx++;
+          coachPhase = "done";
+          renderCoachStage();
+        } else {
+          coachPhase = "rest";
+          coachRestSec = step.ex.restSec;
+          renderCoachStage();
+        }
+      };
+    } else if (coachPhase === "rest") {
+      const nextStep = coachQueue[coachIdx + 1];
+      const nextBand = BANDS.find(b => b.id === nextStep.setData.band) || BANDS[0];
+      stage.innerHTML = `
+        <div class="coach-card" style="text-align:center;">
+          <span class="coach-phase-pill phase-rest">3. Descanso y Recuperación</span>
+          <h2 style="font-size:1.25rem; margin-bottom:4px;">Recupera para el siguiente bloque</h2>
+          <div class="big-timer" style="color:#fbbf24;" id="coachRestTimer">${formatTime(coachRestSec)}</div>
+          <div style="display:flex; justify-content:center; gap:10px; margin-bottom:18px;">
+            <button class="btn" id="coachRestMinus">-15s</button>
+            <button class="btn" id="coachRestPlus">+15s</button>
+          </div>
+
+          <div style="background:var(--bg-input); border:1px solid var(--border); border-radius:12px; padding:14px; text-align:left; margin-bottom:18px;">
+            <div style="font-size:0.76rem; color:var(--text-muted); font-weight:700;">A CONTINUACIÓN:</div>
+            <div style="font-weight:800; font-size:1.05rem; margin:2px 0;">${nextStep.ex.name} (Serie ${nextStep.setIdx + 1}/${nextStep.totalSets})</div>
+            <div style="font-size:0.84rem; color:#93c5fd;">Banda: ${nextBand.label} · Meta: ${nextStep.ex.repMin}–${nextStep.ex.repMax} reps</div>
+          </div>
+
+          <button class="btn btn-primary btn-lg" style="width:100%;" id="coachNextNowBtn">▶ Empezar Siguiente Ahora</button>
+        </div>
+      `;
+
+      const advanceNext = () => {
+        coachIdx++;
+        coachPhase = "prep";
+        renderCoachStage();
+      };
+
+      coachInterval = setInterval(() => {
+        if (coachRestSec > 0) {
+          coachRestSec--;
+          if (coachRestSec <= 3 && coachRestSec > 0) playBeep(520, 0.08);
+          const el = document.getElementById("coachRestTimer");
+          if (el) el.textContent = formatTime(coachRestSec);
+        } else {
+          playBeep(920, 0.25);
+          advanceNext();
+        }
+      }, 1000);
+
+      document.getElementById("coachRestMinus").onclick = () => {
+        coachRestSec = Math.max(0, coachRestSec - 15);
+        document.getElementById("coachRestTimer").textContent = formatTime(coachRestSec);
+      };
+      document.getElementById("coachRestPlus").onclick = () => {
+        coachRestSec += 15;
+        document.getElementById("coachRestTimer").textContent = formatTime(coachRestSec);
+      };
+      document.getElementById("coachNextNowBtn").onclick = advanceNext;
+    }
+  }
+
+  // PLANNING & CALENDAR
+  function renderWeekPlanner() {
+    const grid = document.getElementById("weekPlannerGrid");
+    grid.innerHTML = "";
+    DAYS_OF_WEEK.forEach(d => {
+      const cfg = state.schedule[d.idx];
+      const box = document.createElement("div");
+      box.className = `day-box ${cfg.active ? "active-day" : ""}`;
+      box.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong>${d.name}</strong>
+          <input type="checkbox" ${cfg.active ? "checked" : ""} data-dow="${d.idx}" />
+        </div>
+        <select data-dow-sess="${d.idx}" ${!cfg.active ? "disabled" : ""}>
+          <option value="A" ${cfg.session === "A" ? "selected" : ""}>Sesión A</option>
+          <option value="B" ${cfg.session === "B" ? "selected" : ""}>Sesión B</option>
+        </select>
+        <div style="font-size:0.75rem; color:var(--text-muted);">${cfg.active ? "Día de entreno" : "Descanso"}</div>
+      `;
+      grid.appendChild(box);
+    });
+
+    grid.querySelectorAll("input[type='checkbox']").forEach(chk => {
+      chk.addEventListener("change", e => {
+        const dow = Number(e.target.dataset.dow);
+        state.schedule[dow].active = e.target.checked;
+        saveState();
+        renderWeekPlanner();
+        renderCalendar();
+      });
+    });
+
+    grid.querySelectorAll("select[data-dow-sess]").forEach(sel => {
+      sel.addEventListener("change", e => {
+        const dow = Number(e.target.dataset.dowSess);
+        state.schedule[dow].session = e.target.value;
+        saveState();
+        renderCalendar();
+      });
+    });
+  }
+
+  function renderCalendar() {
+    const grid = document.getElementById("calendarGrid");
+    const year = calViewDate.getFullYear();
+    const month = calViewDate.getMonth();
+    const monthName = calViewDate.toLocaleDateString("es-ES", { month: "long", year: "numeric" });
+    document.getElementById("calMonthTitle").textContent = `Calendario · ${monthName.charAt(0).toUpperCase() + monthName.slice(1)}`;
+
+    grid.innerHTML = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]
+      .map(h => `<div class="cal-head">${h}</div>`).join("");
+
+    const firstDay = new Date(year, month, 1);
+    let startOffset = firstDay.getDay() - 1;
+    if (startOffset < 0) startOffset = 6;
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    for (let i = 0; i < startOffset; i++) {
+      grid.innerHTML += `<div></div>`;
+    }
+
+    const today = todayISO();
+    for (let day = 1; day <= daysInMonth; day++) {
+      const iso = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      const dow = new Date(iso + "T12:00:00").getDay();
+      const log = state.logs[iso];
+      const sched = state.schedule[dow];
+      let badge = "";
+      if (log?.completed) {
+        badge = `<span class="cal-tag tag-done">✓ Sesión ${log.session}</span>`;
+      } else if (log) {
+        badge = `<span class="cal-tag tag-plan">En curso ${log.session}</span>`;
+      } else if (sched?.active) {
+        badge = `<span class="cal-tag tag-plan">Plan ${sched.session}</span>`;
+      }
+
+      const cell = document.createElement("div");
+      cell.className = `cal-cell ${iso === today ? "today" : ""}`;
+      cell.innerHTML = `<div style="font-weight:700;">${day}</div>${badge}`;
+      cell.onclick = () => {
+        currentDateStr = iso;
+        document.getElementById("workoutDate").value = iso;
+        currentSession = detectSessionForDate(iso);
+        document.getElementById("sessionSelect").value = currentSession;
+        initDraftForCurrent();
+        renderWorkout();
+        switchTab("train");
+      };
+      grid.appendChild(cell);
+    }
+  }
+
+  // ANALYTICS & JSON BACKUP
+  function renderAnalytics() {
+    const sel = document.getElementById("chartExerciseSelect");
+    const allEx = [
+      ...WORKOUT_TEMPLATES.A.exercises.filter(e => !e.id.startsWith("warmup")),
+      ...WORKOUT_TEMPLATES.B.exercises.filter(e => !e.id.startsWith("warmup") && !e.id.startsWith("lat_raise_b") && !e.id.startsWith("rear_delt_uni_b"))
+    ];
+    if (!sel.options.length) {
+      allEx.forEach(ex => {
+        const opt = document.createElement("option");
+        opt.value = ex.id;
+        opt.textContent = ex.name;
+        sel.appendChild(opt);
+      });
+      sel.onchange = drawChart;
+    }
+    drawChart();
+    renderHistoryList();
+  }
+
+  function drawChart() {
+    const exId = document.getElementById("chartExerciseSelect").value;
+    const area = document.getElementById("chartArea");
+    const points = Object.keys(state.logs)
+      .sort()
+      .filter(d => state.logs[d]?.exercises?.[exId])
+      .map(d => {
+        const sets = state.logs[d].exercises[exId];
+        const maxReps = Math.max(...sets.map(s => Number(s.reps) || 0));
+        return { date: d.slice(5), maxReps, band: sets[0]?.band || "" };
+      });
+
+    if (!points.length) {
+      area.innerHTML = `<p class="card-sub" style="padding:20px 0;">Aún no hay sesiones registradas para este ejercicio. Completa tu primer entrenamiento para ver la curva de progreso.</p>`;
+      return;
+    }
+
+    const w = Math.max(520, points.length * 70);
+    const h = 190;
+    const maxVal = Math.max(20, ...points.map(p => p.maxReps)) + 2;
+    const coords = points.map((p, i) => {
+      const x = 40 + (points.length === 1 ? 180 : (i * (w - 80)) / (points.length - 1));
+      const y = h - 35 - ((p.maxReps / maxVal) * (h - 60));
+      return { ...p, x, y };
+    });
+
+    const poly = coords.map(c => `${c.x},${c.y}`).join(" ");
+    area.innerHTML = `
+      <svg width="${w}" height="${h}" style="display:block;">
+        <line x1="30" y1="${h - 35}" x2="${w - 20}" y2="${h - 35}" stroke="#26324b" />
+        ${points.length > 1 ? `<polyline fill="none" stroke="#3b82f6" stroke-width="3" points="${poly}" />` : ""}
+        ${coords.map(c => `
+          <circle cx="${c.x}" cy="${c.y}" r="5" fill="#10b981" />
+          <text x="${c.x}" y="${c.y - 10}" fill="#f1f5f9" font-size="11" font-weight="700" text-anchor="middle">${c.maxReps}r</text>
+          <text x="${c.x}" y="${h - 15}" fill="#94a3b8" font-size="10" text-anchor="middle">${c.date}</text>
+        `).join("")}
+      </svg>
+    `;
+  }
+
+  function renderHistoryList() {
+    const list = document.getElementById("historyList");
+    const dates = Object.keys(state.logs).sort().reverse();
+    if (!dates.length) {
+      list.innerHTML = `<p class="card-sub">No hay registros guardados todavía.</p>`;
+      return;
+    }
+    list.innerHTML = dates.map(d => {
+      const item = state.logs[d];
+      return `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+          <div>
+            <strong>${d}</strong> · Sesión ${item.session}
+            <span class="cal-tag ${item.completed ? "tag-done" : "tag-plan"}" style="margin-left:8px;">${item.completed ? "Completada" : "Parcial"}</span>
+          </div>
+          <button class="btn btn-danger" onclick="deleteLog('${d}')">Eliminar</button>
+        </div>
+      `;
+    }).join("");
+  }
+
+  window.deleteLog = (d) => {
+    delete state.logs[d];
+    saveState();
+    renderHistoryList();
+    renderCalendar();
+  };
+
+  function switchTab(tabId) {
+    document.querySelectorAll("#mainTabs button").forEach(b => b.classList.toggle("active", b.dataset.tab === tabId));
+    document.querySelectorAll(".panel").forEach(p => p.classList.toggle("active", p.id === `tab-${tabId}`));
+    if (tabId === "plan") { renderWeekPlanner(); renderCalendar(); }
+    if (tabId === "analytics") renderAnalytics();
+  }
+
+  document.querySelectorAll("#mainTabs button").forEach(btn => {
+    btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+  });
+
+  document.getElementById("workoutDate").value = currentDateStr;
+  document.getElementById("workoutDate").addEventListener("change", e => {
+    currentDateStr = e.target.value || todayISO();
+    currentSession = detectSessionForDate(currentDateStr);
+    document.getElementById("sessionSelect").value = currentSession;
+    initDraftForCurrent();
+    renderWorkout();
+  });
+
+  document.getElementById("sessionSelect").value = currentSession;
+  document.getElementById("sessionSelect").addEventListener("change", e => {
+    currentSession = e.target.value;
+    initDraftForCurrent();
+    renderWorkout();
+  });
+
+  document.getElementById("finishWorkoutBtn").addEventListener("click", () => {
+    Object.values(draftSets).flat().forEach(s => s.done = true);
+    persistDraft();
+    renderWorkout();
+    playBeep(880, 0.2);
+    alert(`Sesión ${currentSession} del ${currentDateStr} guardada correctamente.`);
+  });
+
+  document.getElementById("prevMonthBtn").onclick = () => { calViewDate.setMonth(calViewDate.getMonth() - 1); renderCalendar(); };
+  document.getElementById("nextMonthBtn").onclick = () => { calViewDate.setMonth(calViewDate.getMonth() + 1); renderCalendar(); };
+
+  document.getElementById("exportJsonBtn").onclick = () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `hypertrophylab_backup_${todayISO()}.json`;
+    a.click();
+  };
+
+  document.getElementById("importJsonInput").onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const parsed = JSON.parse(ev.target.result);
+        if (parsed.schedule && parsed.logs) {
+          state = parsed;
+          saveState();
+          initDraftForCurrent();
+          renderWorkout();
+          renderAnalytics();
+          alert("Copia de seguridad importada con éxito.");
+        }
+      } catch (err) {
+        alert("El archivo JSON no tiene un formato válido.");
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  document.getElementById("versionBtn").onclick = () => document.getElementById("changelogModal").classList.add("open");
+  document.getElementById("closeChangelogBtn").onclick = () => document.getElementById("changelogModal").classList.remove("open");
+
+  initDraftForCurrent();
+  renderWorkout();
+  updateRestUI();
+})();
+</script>
+</body>
+</html>
